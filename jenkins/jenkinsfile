@@ -1,0 +1,32 @@
+pipeline {
+  environment {
+        git98='https://github.com/PhuLeRock/ninetyeight.git'
+  }
+  agent any
+  parameters { string(name: 'Branch', defaultValue: 'main', description: 'Enter branch or tag') }
+  stages {
+    stage ('Checkout') {
+          steps {
+                checkout([
+                    $class: 'GitSCM', 
+                    branches: [[name: params.Branch]],
+                    extensions: [], 
+                    userRemoteConfigs: [[credentialsId: 'phule98', 
+                    url: env.git98]]])
+            }
+          }
+    stage ('Preparation') {
+          steps {
+                sh 'pwd'
+                sh 'ls -la'
+                sh 'echo workspace is $WORKSPACE'
+                sh 'print docker version'
+                sh 'docker version'
+                sh 'docker ps -a'
+            }
+          }
+    
+  }
+  
+}
+

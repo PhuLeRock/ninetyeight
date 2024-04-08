@@ -1,0 +1,16 @@
+##
+: '
+echo "remove ansible container"
+docker rm -f ansible
+echo "create container"
+docker run --name ansible -d -v /Users/ball/98/ansible:/tmp/ansible amazonlinux:2023.3.20240312.0 tail -f /dev/null
+echo "List container"
+sleep 4; docker ps 
+'
+
+
+
+
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
+-u ec2-user --private-key=/Users/ball/Documents/sshkey/phultv_np.rsa \
+-i ../terraform/ansible_inventory playbook.yaml

@@ -1,0 +1,19 @@
+
+
+services:
+  jenkins-master:
+    image: jenkins/jenkins:lts
+    container_name: jenkins-master
+    volumes:
+      - /opt/jenkins/jenkins-master/jenkins_home:/var/jenkins_home
+      - /opt/jenkins/jenkins-master/log:/var/log/jenkins
+#      - /Users/ball/Documents/code/phulerock/98/jenkins/jenkins-master/jenkins_home:/var/log/jenkins
+#      - /Users/ball/Documents/code/phulerock/98/jenkins/jenkins-master/log:/var/log/jenkins
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  nginx:
+    image: nginx:1.17.10
+    ports:
+      - "8443:8443"
+    volumes:
+      - /opt/jenkins/jenkins-nginx/nginx:/etc/nginx

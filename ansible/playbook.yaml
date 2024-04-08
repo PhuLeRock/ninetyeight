@@ -1,0 +1,89 @@
+---
+- name: Ping check to server
+  hosts: my_ec2_instance
+  tasks:
+    - name: Ping server
+      ping:
+- name: "AWS - Install docker"
+  hosts: my_ec2_instance
+  become: yes
+  tasks:
+    - name: Update all packages
+      yum:
+        name: '*'
+        state: latest
+        update_only: yes
+
+    - name: Ensure a list of yum packages are installed
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages:
+        - python-pip
+        - yum-utils
+        - device-mapper-persistent-data
+        - lvm2
+
+    - name: Ensure a list of yum packages are installed
+      yum:
+        name: "{{ packages }}"
+        state: latest
+        update_cache: yes
+      vars:
+        packages:
+        - python3.9
+        - ansible
+        - docker
+
+    - name: Enable Docker CE service at startup
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Install docker-compose
+      remote_user: ec2-user
+      get_url: 
+        url : https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64
+        dest: /usr/bin/docker-compose
+        mode: 'u+x,g+x,o+x'
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: ec2-user
+        groups: docker
+        append: true
+      register: add_to_docker_group_result
+    - name: copy dir
+      ansible.builtin.copy:
+        force: true
+        remote_src: true
+        src: /home/ec2-user/jenkins/
+        dest: /opt/jenkins/
+        owner: ec2-user
+        mode: '775'
+    - name: chmod dir
+      ansible.builtin.file:
+        path: /opt/jenkins/jenkins-master/
+        mode: '1777'
+        recurse: true
+    - name: Docker-compose down
+      ansible.builtin.shell:  docker-compose down
+      args:
+        chdir: /opt/jenkins   
+    - name: Docker-compose up
+      ansible.builtin.shell:  docker-compose up -d
+      args:
+        chdir: /opt/jenkins      
+    - name: Pause for 5 seconds to build app cache
+      ansible.builtin.pause:
+        seconds: 10
+    - name: Jenkins init password 
+      ansible.builtin.shell:  docker-compose exec jenkins-master cat /var/jenkins_home/secrets/initialAdminPassword
+      register: output
+      args:
+        chdir: /opt/jenkins
+    - debug: var=output.stdout_lines
+
+       
