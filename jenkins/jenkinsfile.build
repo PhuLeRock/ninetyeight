@@ -1,6 +1,7 @@
 pipeline {
   environment {
         git98='https://github.com/PhuLeRock/ninetyeight.git'
+        CREDID = "98gittoken"
         ECRCREDENTIALS = "ecr:ap-southeast-1:aws098"
         AWS_ACCOUNT_ID = "your account id"
         AWS_DEFAULT_REGION = "ap-southeast-1"
@@ -18,7 +19,7 @@ pipeline {
                     $class: 'GitSCM', 
                     branches: [[name: params.Branch]],
                     extensions: [], 
-                    userRemoteConfigs: [[credentialsId: 'phule98', 
+                    userRemoteConfigs: [[credentialsId: env.CREDID, 
                     url: env.git98]]])
             }
           }
