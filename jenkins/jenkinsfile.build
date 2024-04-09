@@ -47,16 +47,16 @@ pipeline {
     stage('Tagging...') {
       steps {  
             script {
-                  sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"""
-                  sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${VERSION}.${env.BUILD_NUMBER}"""
+                  sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:$IMAGE_TAG"""
+                  sh """docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:${VERSION}.${env.BUILD_NUMBER}"""                  
             }
       }
     } 
     stage('Logging into AWS ECR and push') {
       steps {
-          sh "aws ecr get-login --no-include-email --registry-ids ${REPOSITORY_URI} --region ${AWS_DEFAULT_REGION} --profile ${ECR_PROFILE} | bash"
-          sh "docker build -t ${DOCKER_IMAGE_NAME} -f ${DOCKER_FILE} ."
-          sh "docker tag ${DOCKER_IMAGE_NAME}:latest ${REPO_NAME}:${IMAGE_TAG}"
+          sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}"
+          sh "docker push ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:${VERSION}.${env.BUILD_NUMBER}"
+          sh "docker push ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:$IMAGE_TAG"
       }             
     }
   }

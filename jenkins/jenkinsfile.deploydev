@@ -1,0 +1,27 @@
+pipeline {
+  environment {
+        git98='https://github.com/PhuLeRock/ninetyeight.git'
+        ECRCREDENTIALS = "ecr:ap-southeast-1:aws098"
+        AWS_ACCOUNT_ID = "your account id"
+        AWS_DEFAULT_REGION = "ap-southeast-1"
+        IMAGE_REPO_NAME = "pyapp"
+        IMAGE_TAG = "latest"
+        VERSION = "0.1.0"
+        REPOSITORY_URI = "667656621301.dkr.ecr.ap-southeast-1.amazonaws.com"
+  }
+  agent any
+  parameters { 
+      string(name: 'ImageTag', defaultValue: 'latest', description: 'Docker image tag') 
+      }
+  stages {
+    stage('Logging into AWS ECR and ') {
+      steps {
+          sh "aws ecr get-login --no-include-email --registry-ids ${REPOSITORY_URI} --region ${AWS_DEFAULT_REGION} --profile ${ECR_PROFILE} | bash"
+          sh "docker pull ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:$IMAGE_TAG"
+          sh "docker rm -f dev-pyapp"
+          sh "docker run --name dev-pyapp -d -p 6000:5000 appupload:latest"
+      }             
+    }
+  }
+
+}
