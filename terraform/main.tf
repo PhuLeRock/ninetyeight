@@ -145,3 +145,12 @@ resource "null_resource" "ansible_inventory1" {
     command = "rsync -r -e 'ssh -i /Users/ball/Documents/sshkey/phultv_np.rsa -o StrictHostKeyChecking=no' ../jenkins/ ec2-user@${aws_instance.my_ec2_instance.public_ip}:/home/ec2-user/"
   }  
 }
+resource "aws_ecr_repository" "registry" {
+  name                 = "pyapp"
+  image_tag_mutability = "MUTABLE"
+  tags = {
+    Owner       = "DevopsTest"
+    Environment = "dev"
+    Terraform   = true
+  }
+}
