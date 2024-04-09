@@ -17,7 +17,7 @@ pipeline {
           steps {
                 checkout([
                     $class: 'GitSCM', 
-                    branches: [[name: params.Branch]],
+                    branches: [[name: params. ]],
                     extensions: [], 
                     userRemoteConfigs: [[credentialsId: env.CREDID, 
                     url: env.git98]]])

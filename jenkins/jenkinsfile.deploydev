@@ -12,6 +12,7 @@ pipeline {
   agent any
   parameters { 
       string(name: 'ImageTag', defaultValue: 'latest', description: 'Docker image tag') 
+      string(name: 'Branch', defaultValue: 'main', description: 'Enter branch or tag')
       }
   stages {
     stage ('Checkout') {
@@ -27,9 +28,9 @@ pipeline {
     stage('Logging into AWS ECR and run container ') {
       steps {
           sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}"
-          sh "docker pull ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:$IMAGE_TAG"
-          sh "docker rm -f dev-pyapp"
-          sh "docker run --name dev-pyapp -d -p 6000:5000 appupload:latest"
+          sh """ docker pull ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:$IMAGE_TAG"""
+          sh """ docker rm -f dev-pyapp"""
+          sh """ docker run --name dev-pyapp -d -p 6000:5000 appupload:latest"""
       }             
     }
   }
