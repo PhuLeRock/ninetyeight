@@ -55,7 +55,7 @@ pipeline {
     stage('Logging into AWS ECR and push') {
       steps {
             script {
-              docker.withRegistry(REPOSITORY_URI, ecrcredentials) {     
+              docker.withRegistry(REPOSITORY_URI, ECRCREDENTIALS) {     
               dockerImage.push("${VERSION}.${env.BUILD_NUMBER}")
               dockerImage.push('latest')    
               }  
