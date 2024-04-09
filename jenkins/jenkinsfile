@@ -54,12 +54,9 @@ pipeline {
     } 
     stage('Logging into AWS ECR and push') {
       steps {
-            script {
-              docker.withRegistry(${REPOSITORY_URI}, ${ECRCREDENTIALS}) {     
-              dockerImage.push("${VERSION}.${env.BUILD_NUMBER}")
-              dockerImage.push('latest')    
-              }  
-            }
+          sh "aws ecr get-login --no-include-email --registry-ids ${REPOSITORY_URI} --region ${AWS_DEFAULT_REGION} --profile ${ECR_PROFILE} | bash"
+          sh "docker build -t ${DOCKER_IMAGE_NAME} -f ${DOCKER_FILE} ."
+          sh "docker tag ${DOCKER_IMAGE_NAME}:latest ${REPO_NAME}:${IMAGE_TAG}"
       }             
     }
   }

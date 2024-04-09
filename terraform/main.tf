@@ -78,7 +78,10 @@ resource "aws_iam_role" "ssm_instance_role" {
     })
   }
 }
-
+resource "aws_iam_role_policy_attachment" "attach_ecr_container_build_policy" {
+  role       = aws_iam_role.ssm_instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/EC2InstanceProfileForImageBuilderECRContainerBuilds"
+}
 # Create security group
 resource "aws_security_group" "ec2_security_group" {
   vpc_id = aws_vpc.my_vpc.id
