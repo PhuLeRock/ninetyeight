@@ -85,5 +85,3 @@
       args:
         chdir: /opt/jenkins
     - debug: var=output.stdout_lines
-
-       

@@ -23,6 +23,7 @@ pipeline {
                 sh 'echo print docker version'
                 sh 'docker version'
                 sh 'docker ps -a'
+                sh ''
             }
           }
     
