@@ -1,13 +1,11 @@
 ## Overview of this codebase:
-This app written in Pyton Flask, by ChatGPT. Honestly I'm not very well at coding, but I believe Flask is the easiest way to create the simple api, so here is my promt:
+This app is written in Python Flask by ChatGPT. Honestly, I'm not very proficient at coding, but I believe Flask is the easiest way to create a simple API. So here is my prompt:
 ```
-write program using python Flask, create restapi that I can store, list files, retrieve files, delete files with 4 simple route CRUD 
+Write a program using Python Flask to create a REST API that can store, list, retrieve, and delete files with four simple CRUD routes.
 ```
+Terraform will provision AWS infrastructure including VPC, subnet, IGW, IAM, and EC2. It will then synchronize Nginx's files to the server and generate an Ansible inventory file. This file will be used in the ansible/ansible.run file to continue the installations for this server, including Jenkins, Nginx, and Docker.
 
-Terrafom will provision aws infrastructures including VPC, subnet, IGW, IAM , EC2. Then it rsync nginx's files to the server and generate Ansible inventory file. This file will be used in file ansible/ansible.run to continue the installations for this server including Jenkins, Nginx, Docker.
-
-To cover basic security level, I want to enable TLS for Jenkins, that is the reason I use Nginx SSL proxy for this case. To enable this server login to ECR, I use IAM instance role instead User Access Key.
-
+To cover basic security measures, I want to enable TLS for Jenkins. That is the reason I use an Nginx SSL proxy for this case. To enable this server login to ECR, I use IAM instance role instead of User Access Key.
 
 # HOW TO SET IT UP
 ## Prerequisites
